@@ -1,5 +1,5 @@
-Landing Page
-Run this followed commands:
+Landing Page created with three.js
+Run this following commands:
 
 ``` bash
 # Install dependencies (only the first time)
