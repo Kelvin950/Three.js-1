@@ -1,6 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import * as dat from "dat.gui"
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -56,6 +57,19 @@ const scene = new THREE.Scene();
 // geometry.setAttribute("position" , positionsAttribute)
 // geometry.setAttribute("position" , positionsAttribute);
 
+const gui  =  new dat.GUI({width:300, closed:true})
+
+
+const parameter =  {
+    color:0xfff0
+}
+
+// gui.addColor(parameter , "color").onChange(()=>{
+//     material.color.set(parameter.color)
+// })
+// gui.addColor(parameter , "color").onChange(()=>{
+//     pointMaterial.color.set(parameter.color)
+// })
 const particleGeometry =  new THREE.BufferGeometry;
 const particleCount = 500;
 
@@ -72,14 +86,27 @@ const material =  new THREE.PointsMaterial({
 });
 
 const pointMaterial  = new THREE.PointsMaterial({
-    size:0.005,color:0xfde0a9
+    size:0.005,color:parameter.color
 })
 
 const mesh =  new THREE.Points(geometry , material);
+const torusGeometry = gui.addFolder("TorusGeometry");
+torusGeometry.addColor(parameter , "color").onChange(()=>{
+  material.color.set(parameter.color)    
+})
+torusGeometry.add(mesh.rotation , "y" , -10,10 ,0.01);
+torusGeometry.add(mesh.rotation , "x" , -10,10 ,0.01);
+torusGeometry.add(mesh.rotation , "z" , -10,10 ,0.01);
+
 const particlesmesh=  new THREE.Points(particleGeometry ,pointMaterial );
 scene.add(mesh);
 scene.add(particlesmesh)
-
+const particlesFolder = gui.addFolder("Particles");
+particlesFolder.add(particlesmesh.rotation , "x" , -10 ,10 , 0.01);
+particlesFolder.add(particlesmesh.rotation, "y" , -10 , 10 , 0.01);
+particlesFolder.addColor(parameter , "color").onChange(()=>{
+    pointMaterial.color.set(parameter.color);
+})
 const size =  {
     width:window.innerWidth,
     height:window.outerHeight
